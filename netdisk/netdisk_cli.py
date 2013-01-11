@@ -12,12 +12,13 @@ Commands = {'ask':'ask_token',
         'ls':'ls',
         'rm':'rm',
         'mv':'mv',
+        'cp':'cp',
         'info':'account_info'}
 Netdisk = {'dropbox':Dropbox,
         }
 def main():
     usage = "usage: %prog [options] command [argument ...]"
-    desc = "Commands: ask, put, get, ls, rm, mv, info"
+    desc = "Commands: %s"% ','.join(Commands.keys())
     sample = "Sample: netdisk_cli.py -a apptoken -u usertoken ls"
     parser = OptionParser(usage, description=desc, epilog=sample)
     parser.add_option("-q", "--quiet",
@@ -32,6 +33,9 @@ def main():
     parser.add_option("-u", "",
             action="store", dest="usertoken", default='',
             help="user access token")
+    parser.add_option("-d", "",
+            action="store", dest="desttoken", default='',
+            help="destination user access token, for copy between two users")
     (options, args) = parser.parse_args()
     if not args: 
         parser.print_help()
@@ -40,11 +44,17 @@ def main():
         print('command error!')
         sys.exit(1)
     net_disk = Netdisk[options.netdisk](options.apptoken, options.usertoken)
+    net_disk2 = Netdisk[options.netdisk](options.apptoken, options.desttoken)
     if args[0] == 'ask':
         net_disk.ask_token()
         sys.exit(0)
     if not net_disk.is_login():
         net_disk.ask_token()
+    if args[0] == 'cp':
+        if not net_disk2.is_login():
+            net_disk2.ask_token()
+        net_disk.cp([net_disk2] + args[1:])
+        sys.exit(0)
     cmd = getattr(net_disk, Commands[args[0]])
     cmd(args[1:])
 

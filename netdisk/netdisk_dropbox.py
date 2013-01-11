@@ -61,6 +61,11 @@ class Dropbox(NetworkDisk):
         self.api_client.file_delete(path)
 
     @command()
+    def cp(self, netdisk, from_path, to_path, *args):
+        copy_ref = self.api_client.create_copy_ref(from_path)['copy_ref']
+        metadata = netdisk.api_client.add_copy_ref(copy_ref, to_path)
+
+    @command()
     def mv(self, from_path, to_path, *args):
         """move/rename a file or directory"""
         self.api_client.file_move(from_path, to_path)
