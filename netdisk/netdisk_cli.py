@@ -1,4 +1,6 @@
-#/bin/env python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import sys
 from optparse import OptionParser
 
@@ -15,16 +17,21 @@ Netdisk = {'dropbox':Dropbox,
         }
 def main():
     usage = "usage: %prog [options] command [argument ...]"
-    parser = OptionParser(usage)
-    parser.add_option("-n", "--netdisk",
-            action="store", dest="netdisk", default='dropbox',
-            help="netdisk type: dropbox")
-    parser.add_option("-t", "--token",
-            action="store", dest="token", default='',
-            help="user access token")
+    desc = "Commands: ask, put, get, ls, rm, mv, info"
+    sample = "Sample: netdisk_cli.py -a apptoken -u usertoken ls"
+    parser = OptionParser(usage, description=desc, epilog=sample)
     parser.add_option("-q", "--quiet",
             action="store_false", dest="verbose", default=True,
             help="don't print status messages to stdout")
+    parser.add_option("-n", "",
+            action="store", dest="netdisk", default='dropbox',
+            help="netdisk type: dropbox")
+    parser.add_option("-a", "",
+            action="store", dest="apptoken", default='',
+            help="netdisk app token")
+    parser.add_option("-u", "",
+            action="store", dest="usertoken", default='',
+            help="user access token")
     (options, args) = parser.parse_args()
     if not args: 
         parser.print_help()
@@ -32,7 +39,7 @@ def main():
     if args[0] not in Commands:
         print('command error!')
         sys.exit(1)
-    net_disk = Netdisk[options.netdisk](options.token)
+    net_disk = Netdisk[options.netdisk](options.apptoken, options.usertoken)
     if args[0] == 'ask':
         net_disk.ask_token()
         sys.exit(0)
@@ -43,5 +50,4 @@ def main():
 
 if __name__ == '__main__':
     main()
-    user_token = '4g072xbgw1wj5uy|x7w4mjf2nlbrrtm'
 

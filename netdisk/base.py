@@ -1,4 +1,5 @@
-#/bin/env python
+
+import sys
 
 def command(login_required=True):
     """a decorator for handling authentication and exceptions"""
@@ -18,7 +19,7 @@ def command(login_required=True):
     return decorate
 
 class NetworkDisk(object):
-    def __init__(self, token=None):
+    def __init__(self, token=None, usertoken=None):
         self.session = None
         self.api_client = None
 

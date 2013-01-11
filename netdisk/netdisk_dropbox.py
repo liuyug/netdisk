@@ -1,4 +1,3 @@
-#/bin/env python
 import sys
 import locale
 import os
@@ -9,16 +8,16 @@ from optparse import OptionParser
 from dropbox import client, rest, session
 
 from base import command, NetworkDisk
-from config import DROPBOX_KEY, DROPBOX_SECRET
 
 ACCESS_TYPE = 'app_folder'  # should be 'dropbox' or 'app_folder' as configured for your app
 
 class Dropbox(NetworkDisk):
-    def __init__(self, token=None):
-        super(Dropbox, self).__init__(token)
-        self.session = session.DropboxSession(DROPBOX_KEY, DROPBOX_SECRET, access_type=ACCESS_TYPE)
-        if token:
-            self.session.set_token(*token.split('|'))
+    def __init__(self, apptoken=None, usertoken=None):
+        super(Dropbox, self).__init__(apptoken,usertoken)
+        if apptoken:
+            self.session = session.DropboxSession(*apptoken.split('|'), access_type=ACCESS_TYPE)
+        if usertoken:
+            self.session.set_token(*usertoken.split('|'))
             self.api_client = client.DropboxClient(self.session)
 
     def ask_token(self, *args):
