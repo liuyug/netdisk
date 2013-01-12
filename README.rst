@@ -6,14 +6,16 @@ NetDisk
 
 + Dropbox
 
+  下载 `Dropbox API <https://www.dropbox.com/developers>`_
+
 命令行格式
 ==========
 
-::
+Usage::
 
     Usage: netdisk_cli.py [options] command [argument ...]
     
-    Commands: ask, put, get, ls, rm, mv, info
+    Commands: ask, put, get, ls, rm, mv, info, cp
     
     Options:
       -h, --help    show this help message and exit
