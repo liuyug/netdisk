@@ -61,6 +61,12 @@ class Dropbox(NetworkDisk):
         self.api_client.file_delete(path)
 
     @command()
+    def cat(self, path, *args):
+        """cat a file"""
+        f, metadata = self.api_client.get_file_and_metadata(path)
+        sys.stdout.write(f.read())
+
+    @command()
     def cp(self, netdisk, from_path, to_path, *args):
         copy_ref = self.api_client.create_copy_ref(from_path)['copy_ref']
         metadata = netdisk.api_client.add_copy_ref(copy_ref, to_path)

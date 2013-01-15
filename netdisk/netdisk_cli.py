@@ -11,6 +11,7 @@ Commands = {'ask':'ask_token',
         'get':'get',
         'ls':'ls',
         'rm':'rm',
+        'cat':'cat',
         'mv':'mv',
         'cp':'cp',
         'info':'account_info'}
@@ -44,13 +45,16 @@ def main():
         print('command error!')
         sys.exit(1)
     net_disk = Netdisk[options.netdisk](options.apptoken, options.usertoken)
-    net_disk2 = Netdisk[options.netdisk](options.apptoken, options.desttoken)
     if args[0] == 'ask':
         net_disk.ask_token()
         sys.exit(0)
     if not net_disk.is_login():
         net_disk.ask_token()
     if args[0] == 'cp':
+        if options.desttoken:
+            net_disk2 = Netdisk[options.netdisk](options.apptoken, options.desttoken)
+        else:
+            net_disk2 = net_disk
         if not net_disk2.is_login():
             net_disk2.ask_token()
         net_disk.cp([net_disk2] + args[1:])

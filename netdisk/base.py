@@ -46,6 +46,10 @@ class NetworkDisk(object):
         raise NotImeplement
 
     @command()
+    def cat(self, path, *args):
+        raise NotImeplement
+
+    @command()
     def cp(self, client, from_path, to_path, *args):
         raise NotImeplement
 
