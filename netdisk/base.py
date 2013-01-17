@@ -4,7 +4,7 @@ import sys
 def command(login_required=True):
     """a decorator for handling authentication and exceptions"""
     def decorate(f):
-        def wrapper(self, args):
+        def wrapper(self, *args):
             if login_required and not self.is_login():
                 sys.stdout.write("Please 'login' to execute this command\n")
                 return
@@ -19,45 +19,45 @@ def command(login_required=True):
     return decorate
 
 class NetworkDisk(object):
-    def __init__(self, token=None, usertoken=None):
+    def __init__(self, token, usertoken):
         self.session = None
         self.api_client = None
 
-    def ask_token(self, *args):
+    def ask_token(self):
         raise NotImeplement
 
     def is_login(self):
         return False
 
     @command()
-    def put(self, from_path, to_path, *args):
+    def put(self, from_path, to_path):
         raise NotImeplement
 
     @command()
-    def get(self, from_path, to_path, *args):
+    def get(self, from_path, to_path):
         raise NotImeplement
 
     @command()
-    def ls(self, path='', *args):
+    def ls(self, path=''):
         raise NotImeplement
 
     @command()
-    def rm(self, path, *args):
+    def rm(self, path):
         raise NotImeplement
 
     @command()
-    def cat(self, path, *args):
+    def cat(self, path):
         raise NotImeplement
 
     @command()
-    def cp(self, client, from_path, to_path, *args):
+    def cp(self, client, from_path, to_path):
         raise NotImeplement
 
     @command()
-    def mv(self, from_path, to_path, *args):
+    def mv(self, from_path, to_path):
         raise NotImeplement
 
     @command()
-    def account_info(self, *args):
+    def account_info(self):
         raise NotImeplement
 

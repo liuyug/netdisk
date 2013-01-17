@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python 
 # -*- coding: utf-8 -*-
 
 import sys
@@ -57,10 +57,10 @@ def main():
             net_disk2 = net_disk
         if not net_disk2.is_login():
             net_disk2.ask_token()
-        net_disk.cp([net_disk2] + args[1:])
+        net_disk.cp(net_disk2, *args[1:])
         sys.exit(0)
     cmd = getattr(net_disk, Commands[args[0]])
-    cmd(args[1:])
+    cmd(*args[1:])
 
 if __name__ == '__main__':
     main()
