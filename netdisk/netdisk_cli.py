@@ -17,11 +17,15 @@ Commands = {'ask':'ask_token',
         'info':'account_info'}
 Netdisk = {'dropbox':Dropbox,
         }
+Version = '1.0'
 def main():
     usage = "usage: %prog [options] command [argument ...]"
+    ver = '''%%prog %s\n\nModule:
+    dropbox %s
+    '''% (Version, Dropbox.version)
     desc = "Commands: %s"% ','.join(Commands.keys())
     sample = "Sample: netdisk_cli.py -a apptoken -u usertoken ls"
-    parser = OptionParser(usage, description=desc, epilog=sample)
+    parser = OptionParser(usage, version=ver, description=desc, epilog=sample)
     parser.add_option("-q", "--quiet",
             action="store_false", dest="verbose", default=True,
             help="don't print status messages to stdout")
@@ -38,6 +42,10 @@ def main():
             action="store", dest="desttoken", default='',
             help="destination user access token, for copy between two users")
     (options, args) = parser.parse_args()
+    #if options.version:
+    #    print('Netdisk version: %s'% Version)
+    #    print('Module:')
+    #    print('    dropbox: %s', Dropbox.version)
     if not args: 
         parser.print_help()
         sys.exit(1)

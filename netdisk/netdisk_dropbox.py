@@ -12,6 +12,7 @@ from base import command, NetworkDisk
 ACCESS_TYPE = 'app_folder'  # should be 'dropbox' or 'app_folder' as configured for your app
 
 class Dropbox(NetworkDisk):
+    version = '1.5.1'
     def __init__(self, apptoken, usertoken):
         super(Dropbox, self).__init__(apptoken,usertoken)
         if apptoken:
