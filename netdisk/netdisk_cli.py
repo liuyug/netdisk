@@ -5,6 +5,7 @@ import sys
 from optparse import OptionParser
 
 from netdisk_dropbox import Dropbox
+from netdisk_kuaipan import Kuaipan
 
 Commands = {'ask':'ask_token',
         'put':'put',
@@ -15,23 +16,26 @@ Commands = {'ask':'ask_token',
         'mv':'mv',
         'cp':'cp',
         'info':'account_info'}
-Netdisk = {'dropbox':Dropbox,
+Netdisk = {
+        'dropbox':Dropbox,
+        'kuaipan':Kuaipan,
         }
 Version = '1.0'
 def main():
     usage = "usage: %prog [options] command [argument ...]"
-    ver = '''%%prog %s\n\nModule:
-    dropbox %s
-    '''% (Version, Dropbox.version)
+    ver = '''%%prog %s\n\nModule:\n%s'''% (
+            Version, 
+            '\n'.join(['    %s: %s'% (x, xc.version) for x, xc in Netdisk.items()])
+            )
     desc = "Commands: %s"% ','.join(Commands.keys())
-    sample = "Sample: netdisk_cli.py -a apptoken -u usertoken ls"
+    sample = "Sample: netdisk_cli.py -n dropbox -a apptoken -u usertoken ls"
     parser = OptionParser(usage, version=ver, description=desc, epilog=sample)
     parser.add_option("-q", "--quiet",
             action="store_false", dest="verbose", default=True,
             help="don't print status messages to stdout")
     parser.add_option("-n", "",
             action="store", dest="netdisk", default='dropbox',
-            help="netdisk type: dropbox")
+            help="netdisk type: %s"% ', '.join(Netdisk.keys()))
     parser.add_option("-a", "",
             action="store", dest="apptoken", default='',
             help="netdisk app token")
@@ -42,10 +46,6 @@ def main():
             action="store", dest="desttoken", default='',
             help="destination user access token, for copy between two users")
     (options, args) = parser.parse_args()
-    #if options.version:
-    #    print('Netdisk version: %s'% Version)
-    #    print('Module:')
-    #    print('    dropbox: %s', Dropbox.version)
     if not args: 
         parser.print_help()
         sys.exit(1)

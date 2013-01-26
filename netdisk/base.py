@@ -23,9 +23,11 @@ class NetworkDisk(object):
         self.session = None
         self.api_client = None
 
+    @command(login_required=False)
     def ask_token(self):
         raise NotImeplement
 
+    @command(login_required=False)
     def is_login(self):
         return False
 
