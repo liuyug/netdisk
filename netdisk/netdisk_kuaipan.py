@@ -47,6 +47,7 @@ class Kuaipan(NetworkDisk):
     def get(self, from_path, to_path):
         to_file = open(os.path.expanduser(to_path), "wb")
         rs=self.api_client.download_file(to_path)
+        print 'Downloading %s => %s'% (from_path, to_path)
         to_file.write(rs.read())
 
     @exectime
