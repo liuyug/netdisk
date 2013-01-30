@@ -1,5 +1,16 @@
 
 import sys
+import time
+
+def exectime(func):
+    def newFunc(self, *args):
+        t0 = time.time()
+        ret = func(self, *args)
+        t1 = time.time()
+        print '-'*80
+        print 'Spend %.3fs on function, %s'% (t1-t0, func.__name__)
+        return ret
+    return newFunc
 
 def command(login_required=True):
     """a decorator for handling authentication and exceptions"""
@@ -15,6 +26,7 @@ def command(login_required=True):
                 sys.stdout.write(str(e) + '\n')
 
         wrapper.__doc__ = f.__doc__
+        wrapper.__name__ = f.__name__
         return wrapper
     return decorate
 

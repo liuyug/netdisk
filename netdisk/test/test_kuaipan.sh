@@ -25,7 +25,7 @@ echo "==== cat ===="
 echo "==== mv ===="
 ../netdisk_cli.py -n kuaipan -a 'xcbjepsPi1sbTBJh|GKW0dvIwWrnyAYXt' \
     -u '000bd98a45e8b717b001d834|be7c24c6de9640f08d45a02289dcf9e0' \
-    mv test/t.sh test/a.sh 
+    mv test/t.sh test2/a.sh 
 
 echo "==== put a.sh ===="
 ../netdisk_cli.py -n kuaipan -a 'xcbjepsPi1sbTBJh|GKW0dvIwWrnyAYXt' \
