@@ -8,7 +8,7 @@ def exectime(func):
         ret = func(self, *args)
         t1 = time.time()
         print '-'*80
-        print 'Spend %.3fs on function, %s'% (t1-t0, func.__name__)
+        print 'Spend %.3fs on function: %s'% (t1-t0, func.__name__)
         return ret
     return newFunc
 
@@ -23,7 +23,7 @@ def command(login_required=True):
             try:
                 return f(self, *args)
             except Exception, e:
-                sys.stdout.write(str(e) + '\n')
+                sys.stdout.write('%s: %s\n'% (f.__name__,str(e)))
 
         wrapper.__doc__ = f.__doc__
         wrapper.__name__ = f.__name__

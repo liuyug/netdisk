@@ -41,7 +41,9 @@ class Dropbox(NetworkDisk):
 
     @exectime
     @command()
-    def get(self, from_path, to_path):
+    def get(self, from_path, to_path=''):
+        if not to_path:
+            to_path = os.path.basename(from_path)
         to_file = open(os.path.expanduser(to_path), "wb")
         f, metadata = self.api_client.get_file_and_metadata(from_path)
         print 'Downloading %s => %s: %s'% (from_path, to_path, metadata['size'].encode('utf-8'))
