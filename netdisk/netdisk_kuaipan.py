@@ -5,7 +5,7 @@ import pprint
 
 from kuaipan import client, session
 
-from base import exectime, command, NetworkDisk
+from base import exectime, command, NetworkDisk, sizeof_fmt
 
 ACCESS_TYPE = 'app_folder'  # should be 'dropbox' or 'app_folder' as configured for your app
 
@@ -54,13 +54,21 @@ class Kuaipan(NetworkDisk):
 
     @exectime
     @command()
-    def ls(self, path=''):
+    def ls(self, path='/'):
+        path = os.path.join('/', path)
         resp = self.api_client.metadata(path)
         if 'files' in resp:
             for f in resp['files']:
-                name = os.path.basename(f['name'])
+                size = ''
+                folder=''
+                if f['type'] == 'folder':
+                    folder='/'
+                else:
+                    size = f['size']
+                    size = sizeof_fmt(size)
+                name = os.path.join(path,f['name'])
                 encoding = locale.getdefaultlocale()[1]
-                sys.stdout.write(('%s\n' % name).encode(encoding))
+                sys.stdout.write(('%9s %s%s\n' % (size,name,folder)).encode(encoding))
 
     @exectime
     @command()

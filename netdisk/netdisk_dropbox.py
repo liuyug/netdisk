@@ -51,14 +51,21 @@ class Dropbox(NetworkDisk):
 
     @exectime
     @command()
-    def ls(self, path=''):
+    def ls(self, path='/'):
         resp = self.api_client.metadata(path)
 
         if 'contents' in resp:
             for f in resp['contents']:
-                name = os.path.basename(f['path'])
+                size = ''
+                folder=''
+                if f['is_dir']:
+                    folder='/'
+                else:
+                    #size = f['bytes']
+                    size = f['size']
+                name = f['path']
                 encoding = locale.getdefaultlocale()[1]
-                sys.stdout.write(('%s\n' % name).encode(encoding))
+                sys.stdout.write(('%9s %s%s\n' % (size,name,folder)).encode(encoding))
 
     @exectime
     @command()
