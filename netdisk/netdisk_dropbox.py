@@ -12,7 +12,6 @@ ACCESS_TYPE = 'app_folder'  # should be 'dropbox' or 'app_folder' as configured 
 class Dropbox(NetworkDisk):
     version = '1.5.1'
     def __init__(self, apptoken, usertoken=None):
-        import ipdb; ipdb.set_trace()    # BREAKPOINT
         super(Dropbox, self).__init__(apptoken,usertoken)
         if apptoken:
             self.session = session.DropboxSession(*apptoken.split('|'), access_type=ACCESS_TYPE)
