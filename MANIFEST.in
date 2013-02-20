@@ -1,3 +1,4 @@
 include *.rst
+include netdisk/dropbox/*.crt
 recursive-include test test*
 
