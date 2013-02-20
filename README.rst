@@ -12,7 +12,7 @@ NetDisk
 
 Usage::
     
-    Usage: netdisk_cli.py [options] command [argument ...]
+    Usage: netdisk_cli [options] command [argument ...]
     
     Commands: info,put,mv,ls,get,ask,rm,cp,cat
     
@@ -25,7 +25,7 @@ Usage::
       -u USERTOKEN  user access token
       -d DESTTOKEN  destination user access token, for copy between two users
     
-    Sample: netdisk_cli.py -a apptoken -u usertoken ls
+    Sample: netdisk_cli -n dropbox -a apptoken -u usertoken ls
 
 Sample::
 

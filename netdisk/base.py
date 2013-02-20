@@ -2,6 +2,10 @@
 import sys
 import time
 
+class NotImeplement(Exception):
+    pass
+
+
 def exectime(func):
     def newFunc(self, *args):
         t0 = time.time()
@@ -31,13 +35,30 @@ def command(login_required=True):
     return decorate
 
 class NetworkDisk(object):
-    def __init__(self, token, usertoken):
+    def __init__(self, token, usertoken=None):
         self.session = None
         self.api_client = None
 
+    def to_token(self, key, secret):
+        raise NotImeplement
+
+    def ask_token_url(self, callback=None):
+        request_token = ''
+        url = ''
+        return request_token, url
+
+    def obtain_access_token(self, request_token):
+        token = ''
+        return token
+
     @command(login_required=False)
     def ask_token(self):
-        raise NotImeplement
+        request_token, url = self.ask_token_url()
+        print "url:", url
+        print "Please authorize in the browser. After you're done, press enter."
+        raw_input()
+        token = self.obtain_access_token(request_token)
+        print('token: %s'% token)
 
     @command(login_required=False)
     def is_login(self):

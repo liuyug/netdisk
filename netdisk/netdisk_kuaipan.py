@@ -3,15 +3,15 @@ import os
 import locale
 import pprint
 
-from kuaipan import client, session
+from .kuaipan import client, session
 
-from base import exectime, command, NetworkDisk, sizeof_fmt
+from .base import exectime, command, NetworkDisk, sizeof_fmt
 
 ACCESS_TYPE = 'app_folder'  # should be 'dropbox' or 'app_folder' as configured for your app
 
 class Kuaipan(NetworkDisk):
     version = '0.1beta'
-    def __init__(self, apptoken, usertoken):
+    def __init__(self, apptoken, usertoken=None):
         super(Kuaipan, self).__init__(apptoken,usertoken)
         if apptoken:
             self.session = session.KuaipanSession(*apptoken.split('|'), access_type=ACCESS_TYPE)
@@ -19,19 +19,22 @@ class Kuaipan(NetworkDisk):
             self.session.set_access_token(*usertoken.split('|'))
             self.api_client = client.KuaipanAPI(self.session)
 
-    @command(login_required=False)
-    def ask_token(self):
+    def to_token(self, key, secret):
+        return session.oauth.OAuthToken(key, secret)
+
+    def ask_token_url(self, callback=None):
         request_token = self.session.obtain_request_token()
         url = '%s%s'% (self.session.AUTH_HOST, request_token.key)
-        print "url:", url
-        print "Please authorize in the browser. After you're done, press enter."
-        raw_input()
+        return request_token, url
+
+    def obtain_access_token(self, request_token):
         self.session.obtain_access_token(request_token)
-        print('token: %s|%s'%(self.session.token.key, self.session.token.secret))
+        token = '%s|%s'% (self.session.token.key, self.session.token.secret)
+        return token
 
     @command(login_required=False)
     def is_login(self):
-        return self.session.is_linked() 
+        return self.session.is_linked()
 
     @exectime
     @command()
@@ -41,6 +44,7 @@ class Kuaipan(NetworkDisk):
         if path:
             self.api_client.create_folder(path)
         ret=self.api_client.upload_file(to_path, from_file, False)
+        return ret
 
     @exectime
     @command()
@@ -89,6 +93,7 @@ class Kuaipan(NetworkDisk):
         """copy file to another user"""
         copy_ref = self.api_client.create_copy_ref(from_path)['copy_ref']
         rs = netdisk.api_client.add_copy_ref(copy_ref, to_path)
+        return rs
 
     @exectime
     @command()

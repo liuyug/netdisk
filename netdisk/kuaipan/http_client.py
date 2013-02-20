@@ -55,9 +55,9 @@ class http_client(object):
 
     @classmethod
     def MultiPartPost(cls, url, data, file_name):
-        from poster.encode import multipart_encode
-        from poster.encode import MultipartParam
-        from poster.streaminghttp import register_openers
+        from .poster.encode import multipart_encode
+        from .poster.encode import MultipartParam
+        from .poster.streaminghttp import register_openers
         
         register_openers()
         if hasattr(data, 'read'):

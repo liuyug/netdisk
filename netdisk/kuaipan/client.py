@@ -5,9 +5,9 @@
 """
 
 import re
-from http_client import http_client
-from session import KuaipanSession
-from session import to_str
+from .http_client import http_client
+from .session import KuaipanSession
+from .session import to_str
 
 def format_path(path):
     if not path:

@@ -3,15 +3,16 @@ import locale
 import os
 import pprint
 
-from dropbox import client, rest, session
+from .dropbox import client, session
 
-from base import exectime, command, NetworkDisk
+from .base import exectime, command, NetworkDisk
 
 ACCESS_TYPE = 'app_folder'  # should be 'dropbox' or 'app_folder' as configured for your app
 
 class Dropbox(NetworkDisk):
     version = '1.5.1'
-    def __init__(self, apptoken, usertoken):
+    def __init__(self, apptoken, usertoken=None):
+        import ipdb; ipdb.set_trace()    # BREAKPOINT
         super(Dropbox, self).__init__(apptoken,usertoken)
         if apptoken:
             self.session = session.DropboxSession(*apptoken.split('|'), access_type=ACCESS_TYPE)
@@ -19,19 +20,22 @@ class Dropbox(NetworkDisk):
             self.session.set_token(*usertoken.split('|'))
             self.api_client = client.DropboxClient(self.session)
 
-    @command(login_required=False)
-    def ask_token(self):
+    def to_token(self, key, secret):
+        return session.OauthToken(key, secret)
+
+    def ask_token_url(self, callback=None):
         request_token = self.session.obtain_request_token()
-        url = self.session.build_authorize_url(request_token)
-        print "url:", url
-        print "Please authorize in the browser. After you're done, press enter."
-        raw_input()
+        url = self.session.build_authorize_url(request_token, oauth_callback=callback)
+        return request_token, url
+
+    def obtain_access_token(self, request_token):
         self.session.obtain_access_token(request_token)
-        print('token: %s|%s'%(self.session.token.key, self.session.token.secret))
+        token = '%s|%s'% (self.session.token.key, self.session.token.secret)
+        return token
 
     @command(login_required=False)
     def is_login(self):
-        return self.session.is_linked() 
+        return self.session.is_linked()
 
     @exectime
     @command()
@@ -86,6 +90,7 @@ class Dropbox(NetworkDisk):
         """copy file to another user"""
         copy_ref = self.api_client.create_copy_ref(from_path)['copy_ref']
         metadata = netdisk.api_client.add_copy_ref(copy_ref, to_path)
+        return metadata
 
     @exectime
     @command()

@@ -4,8 +4,8 @@
 """
 """
 
-import oauth.oauth as oauth
-from http_client import http_client
+from .oauth import oauth as oauth
+from .http_client import http_client
 from urllib import quote
 
 def to_str(x):
@@ -34,7 +34,7 @@ class KuaipanSession():
                     http_method = http_method, http_url = url, parameters = params)
         request.sign_request(self.signature_method, self.consumer, token)
         return request.to_url()
-        
+
     def set_request_token(self, request_token, request_token_secret):
         self.request_token = oauth.OAuthToken(request_token, request_token_secret)
 
@@ -45,10 +45,10 @@ class KuaipanSession():
         return bool(self.token)
 
     def unlink(self):
-        self.token = None  
+        self.token = None
 
     def obtain_request_token(self, callback = None):
-        self.unlink() 
+        self.unlink()
         url = self.build_authorize_url(self.API_HOST, "/open/requestToken", callback = callback)
         ret = http_client.GET(url)
         self.request_token = oauth.OAuthToken(ret['oauth_token'], ret['oauth_token_secret'])
@@ -83,7 +83,7 @@ class KuaipanSession():
         else:
             schema = ""
         return schema + host + target_path
-        
+
 
 
 if __name__ == "__main__":
