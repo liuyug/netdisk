@@ -2,6 +2,7 @@
 import sys
 import time
 
+
 class NotImeplement(Exception):
     pass
 
@@ -11,10 +12,11 @@ def exectime(func):
         t0 = time.time()
         ret = func(self, *args)
         t1 = time.time()
-        print '-'*80
-        print 'Spend %.3fs on function: %s'% (t1-t0, func.__name__)
+        print('-' * 80)
+        print('Spend %.3fs on function: %s' % (t1 - t0, func.__name__))
         return ret
     return newFunc
+
 
 def command(login_required=True):
     """a decorator for handling authentication and exceptions"""
@@ -27,12 +29,13 @@ def command(login_required=True):
             try:
                 return f(self, *args)
             except Exception, e:
-                sys.stdout.write('%s: %s\n'% (f.__name__,str(e)))
+                sys.stdout.write('%s: %s\n' % (f.__name__, str(e)))
 
         wrapper.__doc__ = f.__doc__
         wrapper.__name__ = f.__name__
         return wrapper
     return decorate
+
 
 class NetworkDisk(object):
     def __init__(self, token, usertoken=None):
@@ -58,7 +61,8 @@ class NetworkDisk(object):
         print "Please authorize in the browser. After you're done, press enter."
         raw_input()
         token = self.obtain_access_token(request_token)
-        print('token: %s'% token)
+        print('token: %s' % token)
+        return token
 
     @command(login_required=False)
     def is_login(self):
@@ -96,10 +100,10 @@ class NetworkDisk(object):
     def account_info(self):
         raise NotImeplement
 
+
 def sizeof_fmt(num):
-    for x in ['bytes','KB','MB','GB']:
+    for x in ['bytes', 'KB', 'MB', 'GB']:
         if num < 1024.0 and num > -1024.0:
             return "%3.1f %s" % (num, x)
         num /= 1024.0
     return "%3.1f %s" % (num, 'TB')
-

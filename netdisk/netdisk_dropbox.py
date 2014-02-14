@@ -3,16 +3,18 @@ import locale
 import os
 import pprint
 
-from .dropbox import client, session
+from netdisk.dropbox import client, session
 
-from .base import exectime, command, NetworkDisk
+from netdisk.base import exectime, command, NetworkDisk
 
 ACCESS_TYPE = 'app_folder'  # should be 'dropbox' or 'app_folder' as configured for your app
 
+
 class Dropbox(NetworkDisk):
     version = '1.5.1'
+
     def __init__(self, apptoken, usertoken=None):
-        super(Dropbox, self).__init__(apptoken,usertoken)
+        super(Dropbox, self).__init__(apptoken, usertoken)
         if apptoken:
             self.session = session.DropboxSession(*apptoken.split('|'), access_type=ACCESS_TYPE)
         if usertoken:

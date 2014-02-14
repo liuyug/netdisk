@@ -1,57 +1,62 @@
 #!/bin/sh
+
+cmd="python ../netdisk.py"
+apptoken='xcbjepsPi1sbJh|GKWvIwWrnyAYXt'
+usertoken='000bd98a45e717c3516fda|35f806af45dd99c4d58da8499536'
+
 echo "==== Version ===="
-../netdisk_cli.py --version
+$cmd --version
 
 echo "==== info ===="
-../netdisk_cli.py -n kuaipan -a 'xcbjepsPi1sbTBJh|GKW0dvIwWrnyAYXt' \
-    -u '000bd98a45e8b717b001d834|be7c24c6de9640f08d45a02289dcf9e0' \
+$cmd -n kuaipan -a $apptoken \
+    -u $usertoken \
     info  
 
 echo "==== ls ===="
-../netdisk_cli.py -n kuaipan -a 'xcbjepsPi1sbTBJh|GKW0dvIwWrnyAYXt' \
-    -u '000bd98a45e8b717b001d834|be7c24c6de9640f08d45a02289dcf9e0' \
+$cmd -n kuaipan -a $apptoken \
+    -u $usertoken \
     ls / 
 
 echo "==== put ===="
-../netdisk_cli.py -n kuaipan -a 'xcbjepsPi1sbTBJh|GKW0dvIwWrnyAYXt' \
-    -u '000bd98a45e8b717b001d834|be7c24c6de9640f08d45a02289dcf9e0' \
+$cmd -n kuaipan -a $apptoken \
+    -u $usertoken \
     put test_kuaipan.sh test/t.sh
 
 echo "==== cat ===="
-../netdisk_cli.py -n kuaipan -a 'xcbjepsPi1sbTBJh|GKW0dvIwWrnyAYXt' \
-    -u '000bd98a45e8b717b001d834|be7c24c6de9640f08d45a02289dcf9e0' \
+$cmd -n kuaipan -a $apptoken \
+    -u $usertoken \
     cat test/t.sh
 
 echo "==== mv ===="
-../netdisk_cli.py -n kuaipan -a 'xcbjepsPi1sbTBJh|GKW0dvIwWrnyAYXt' \
-    -u '000bd98a45e8b717b001d834|be7c24c6de9640f08d45a02289dcf9e0' \
+$cmd -n kuaipan -a $apptoken \
+    -u $usertoken \
     mv test/t.sh test2/a.sh 
 
 echo "==== put a.sh ===="
-../netdisk_cli.py -n kuaipan -a 'xcbjepsPi1sbTBJh|GKW0dvIwWrnyAYXt' \
-    -u '000bd98a45e8b717b001d834|be7c24c6de9640f08d45a02289dcf9e0' \
+$cmd -n kuaipan -a $apptoken \
+    -u $usertoken \
     put test_kuaipan.sh test/a.sh
 
 
 echo "==== ls ===="
-../netdisk_cli.py -n kuaipan -a 'xcbjepsPi1sbTBJh|GKW0dvIwWrnyAYXt' \
-    -u '000bd98a45e8b717b001d834|be7c24c6de9640f08d45a02289dcf9e0' \
+$cmd -n kuaipan -a $apptoken \
+    -u $usertoken \
     ls test
 
 echo "==== copy ===="
-../netdisk_cli.py -n kuaipan -a 'xcbjepsPi1sbTBJh|GKW0dvIwWrnyAYXt' \
-    -u '000bd98a45e8b717b001d834|be7c24c6de9640f08d45a02289dcf9e0' \
+$cmd -n kuaipan -a $apptoken \
+    -u $usertoken \
     cp test/a.sh test/b.sh
 
 
 echo "==== rm ===="
-../netdisk_cli.py -n kuaipan -a 'xcbjepsPi1sbTBJh|GKW0dvIwWrnyAYXt' \
-    -u '000bd98a45e8b717b001d834|be7c24c6de9640f08d45a02289dcf9e0' \
+$cmd -n kuaipan -a $apptoken \
+    -u $usertoken \
     rm test
 
 echo "==== ls ===="
-../netdisk_cli.py -n kuaipan -a 'xcbjepsPi1sbTBJh|GKW0dvIwWrnyAYXt' \
-    -u '000bd98a45e8b717b001d834|be7c24c6de9640f08d45a02289dcf9e0' \
+$cmd -n kuaipan -a $apptoken \
+    -u $usertoken \
     ls  
 
 

@@ -3,16 +3,18 @@ import os
 import locale
 import pprint
 
-from .kuaipan import client, session
+from netdisk.kuaipan import client, session
 
-from .base import exectime, command, NetworkDisk, sizeof_fmt
+from netdisk.base import exectime, command, NetworkDisk, sizeof_fmt
 
 ACCESS_TYPE = 'app_folder'  # should be 'dropbox' or 'app_folder' as configured for your app
 
+
 class Kuaipan(NetworkDisk):
     version = '0.1beta'
+
     def __init__(self, apptoken, usertoken=None):
-        super(Kuaipan, self).__init__(apptoken,usertoken)
+        super(Kuaipan, self).__init__(apptoken, usertoken)
         if apptoken:
             self.session = session.KuaipanSession(*apptoken.split('|'), access_type=ACCESS_TYPE)
         if usertoken:
