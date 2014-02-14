@@ -24,8 +24,6 @@ Usage::
       -a APPTOKEN   netdisk app token
       -u USERTOKEN  user access token
       -d DESTTOKEN  destination user access token, for copy between two users
-    
-    Sample: netdisk -n dropbox -a apptoken -u usertoken ls
 
 Sample::
 

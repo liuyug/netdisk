@@ -32,7 +32,9 @@ Netdisk = {
 
 def saveConfig(config_file, diskname, netdisk, apptoken, usertoken):
     config = ConfigParser()
-    config.add_section(diskname)
+    config.read(config_file)
+    if diskname not in config.sections():
+        config.add_section(diskname)
     config.set(diskname, 'netdisk', netdisk)
     config.set(diskname, 'apptoken', apptoken)
     config.set(diskname, 'usertoken', usertoken)
