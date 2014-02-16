@@ -1,6 +1,15 @@
 
+import os
 import sys
 import time
+
+
+def sizeof_fmt(num):
+    for x in ['bytes', 'KB', 'MB', 'GB']:
+        if num < 1024.0 and num > -1024.0:
+            return "%3.1f %s" % (num, x)
+        num /= 1024.0
+    return "%3.1f %s" % (num, 'TB')
 
 
 class NotImeplement(Exception):
@@ -13,7 +22,11 @@ def exectime(func):
         ret = func(self, *args)
         t1 = time.time()
         print('-' * 80)
-        print('Spend %.3fs on function: %s' % (t1 - t0, func.__name__))
+        if ret and func.__name__ in ['get', 'put']:
+            print('Spend %.3fs(%s/s) on "%s"' %
+                    (t1 - t0, sizeof_fmt(ret / (t1 - t0)), func.__name__))
+        else:
+            print('Spend %.3fs on "%s"' % (t1 - t0, func.__name__))
         return ret
     return newFunc
 
@@ -101,9 +114,33 @@ class NetworkDisk(object):
         raise NotImeplement
 
 
-def sizeof_fmt(num):
-    for x in ['bytes', 'KB', 'MB', 'GB']:
-        if num < 1024.0 and num > -1024.0:
-            return "%3.1f %s" % (num, x)
-        num /= 1024.0
-    return "%3.1f %s" % (num, 'TB')
+def file_callback(num, total):
+    percent = num * 100.0 / total
+    bar = int(percent / 2)
+    sys.stdout.write('[%s%s%s] %.2f %%\r' % (
+        '=' * bar,
+        '>' if bar < 50 else '=',
+        ' ' * (50 - bar),
+        percent))
+    sys.stdout.flush()
+
+
+class FileCallback(file):
+    def __init__(self, filename, mode='r', bufsize=-1, callback=file_callback):
+        super(FileCallback, self).__init__(filename, mode, bufsize)
+        super(FileCallback, self).seek(0, os.SEEK_END)
+        self.length = self.tell()
+        super(FileCallback, self).seek(0, os.SEEK_SET)
+        self.callback = callback
+        self.cur_pos = 0
+
+    def read(self, size):
+        data = super(FileCallback, self).read(size)
+        self.cur_pos += len(data)
+        self.callback(self.cur_pos, self.length)
+        return data
+
+    def seek(self, offset, where=os.SEEK_SET):
+        super(FileCallback, self).seek(offset, where)
+        self.cur_pos = self.tell()
+        self.callback(self.cur_pos, self.length)

@@ -1,11 +1,10 @@
 import sys
 import locale
 import os
-import pprint
 
 from netdisk.dropbox import client, session
 
-from netdisk.base import exectime, command, NetworkDisk
+from netdisk.base import exectime, command, sizeof_fmt, NetworkDisk, FileCallback, file_callback
 
 ACCESS_TYPE = 'app_folder'  # should be 'dropbox' or 'app_folder' as configured for your app
 
@@ -41,8 +40,12 @@ class Dropbox(NetworkDisk):
     @exectime
     @command()
     def put(self, from_path, to_path):
-        from_file = open(os.path.expanduser(from_path), "rb")
-        self.api_client.put_file(to_path, from_file)
+        from_file = FileCallback(os.path.expanduser(from_path),
+                "rb", callback=file_callback)
+        print('Uploading %s => %s' % (from_path, to_path))
+        ret = self.api_client.put_file(to_path, from_file)
+        sys.stdout.write('\n')  # to keep process bar
+        return ret.get('bytes', 0)
 
     @exectime
     @command()
@@ -51,8 +54,20 @@ class Dropbox(NetworkDisk):
             to_path = os.path.basename(from_path)
         to_file = open(os.path.expanduser(to_path), "wb")
         f, metadata = self.api_client.get_file_and_metadata(from_path)
-        print 'Downloading %s => %s: %s'% (from_path, to_path, metadata['size'].encode('utf-8'))
-        to_file.write(f.read())
+        print('Downloading %s => %s: %s' %
+                (from_path, to_path, metadata['size'].encode('utf-8')))
+        total_size = metadata.get('bytes', 0)
+        cur_size = 0
+        bufsize = 4096
+        data = f.read(bufsize)
+        while data != '':
+            cur_size += len(data)
+            to_file.write(data)
+            file_callback(cur_size, total_size)
+            data = f.read(bufsize)
+        sys.stdout.write('\n')  # to keep process bar
+        to_file.close()
+        return total_size
 
     @exectime
     @command()
@@ -102,6 +117,15 @@ class Dropbox(NetworkDisk):
     @command()
     def account_info(self):
         """display account information"""
-        f = self.api_client.account_info()
-        pprint.PrettyPrinter(indent=2).pprint(f)
+        def output(metadata, prefix=''):
+            for k, v in metadata:
+                if k == 'quota_info':
+                    print('%squota info:' % prefix)
+                    output(sorted(v.items()), prefix=' ' * 4)
+                    continue
+                elif k in ['normal', 'quota']:
+                    v = sizeof_fmt(v)
+                print('%s%s => %s' % (prefix, k, v))
 
+        f = self.api_client.account_info()
+        output(sorted(f.items()))

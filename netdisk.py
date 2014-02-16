@@ -3,6 +3,7 @@
 
 import os
 import argparse
+import socket
 try:
     from configparser import ConfigParser
 except:
@@ -28,6 +29,8 @@ Netdisk = {
     'dropbox': Dropbox,
     'kuaipan': Kuaipan,
 }
+
+socket.setdefaulttimeout(30)
 
 
 def saveConfig(config_file, diskname, netdisk, apptoken, usertoken):
@@ -71,6 +74,7 @@ def main():
     parser.add_argument('--version', action='version', version=ver)
     parser.add_argument('-v', '--verbose', help='verbose help',
                         action='count', default=0)
+    parser.add_argument('--listdisk', action='store_true', help='list netdisk name in config')
     parser.add_argument('--d1', dest='diskname1', help='netdisk name in config')
     parser.add_argument('--d2', dest='diskname2',
                         help='netdisk name in config, the destination in command cp')
@@ -80,7 +84,7 @@ def main():
     parser.add_argument('-u', dest='usertoken', help='user access token')
     parser.add_argument('-d', dest='desttoken',
                         help='destination user access token, for copy between two users')
-    parser.add_argument('command', metavar='command', choices=Commands.keys(),
+    parser.add_argument('command', metavar='command', nargs='?', choices=Commands.keys(),
                         help='Support: %s' % ', '.join(Commands.keys()))
     parser.add_argument('paths', metavar='path', nargs='*', help='directory or files')
     args = parser.parse_args()
@@ -91,6 +95,16 @@ def main():
     usertoken = args.usertoken if args.usertoken else disk.get('usertoken')
     disk2 = loadConfig(config_file, args.diskname2)
     desttoken = args.desttoken if args.desttoken else disk2.get('usertoken')
+
+    if args.listdisk:
+        config = ConfigParser()
+        config.read(config_file)
+        print('\n'.join(config.sections()))
+        return
+
+    if not netdisk or not apptoken:
+        print('parameter error! %s => %s' % (netdisk, apptoken))
+        return
 
     net_disk = Netdisk[netdisk](apptoken, usertoken)
     if args.command == 'ask':

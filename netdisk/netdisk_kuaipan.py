@@ -1,11 +1,11 @@
 import sys
 import os
 import locale
-import pprint
+import json
 
 from netdisk.kuaipan import client, session
 
-from netdisk.base import exectime, command, NetworkDisk, sizeof_fmt
+from netdisk.base import exectime, command, NetworkDisk, sizeof_fmt, FileCallback, file_callback
 
 ACCESS_TYPE = 'app_folder'  # should be 'dropbox' or 'app_folder' as configured for your app
 
@@ -41,22 +41,39 @@ class Kuaipan(NetworkDisk):
     @exectime
     @command()
     def put(self, from_path, to_path):
-        from_file = open(os.path.expanduser(from_path), "rb")
-        path=os.path.dirname(to_path)
+        from_file = FileCallback(os.path.expanduser(from_path),
+                "rb", callback=file_callback)
+        path = os.path.dirname(to_path)
         if path:
             self.api_client.create_folder(path)
-        ret=self.api_client.upload_file(to_path, from_file, False)
-        return ret
+        print('Uploading %s => %s' % (from_path, to_path))
+        ret = self.api_client.upload_file(to_path, from_file, False)
+        sys.stdout.write('\n')  # to keep process bar
+        ret = json.loads(ret)
+        return int(ret.get('size', '0'))
 
     @exectime
     @command()
     def get(self, from_path, to_path=''):
         if not to_path:
             to_path = os.path.basename(from_path)
-        to_file = open(os.path.expanduser(to_path), "wb")
-        rs=self.api_client.download_file(from_path)
-        print 'Downloading %s => %s'% (from_path, to_path)
-        to_file.write(rs.read())
+        to_file = FileCallback(os.path.expanduser(to_path), "wb")
+        rs = self.api_client.download_file(from_path)
+        md = self.api_client.metadata(from_path)
+        total_size = md.get('size', 0)
+        cur_size = 0
+        bufsize = 4096
+        print('Downloading %s => %s: %s' %
+                (from_path, to_path, sizeof_fmt(total_size)))
+        data = rs.read(bufsize)
+        while data != '':
+            cur_size += len(data)
+            to_file.write(data)
+            file_callback(cur_size, total_size)
+            data = rs.read(bufsize)
+        sys.stdout.write('\n')  # to keep process bar
+        to_file.close()
+        return total_size
 
     @exectime
     @command()
@@ -110,5 +127,7 @@ class Kuaipan(NetworkDisk):
     def account_info(self):
         """display account information"""
         f = self.api_client.account_info()
-        pprint.PrettyPrinter(indent=2).pprint(f)
-
+        for k, v in sorted(f.items()):
+            if k in ['max_file_size', 'quota_total', 'quota_used']:
+                v = sizeof_fmt(v)
+            print('%s => %s' % (k, v))
