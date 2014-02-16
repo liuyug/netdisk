@@ -2,6 +2,8 @@
 NetDisk
 =============
 
+|download|
+
 网盘的命令行接口, 支持以下网盘:
 
 + Dropbox
@@ -9,31 +11,38 @@ NetDisk
 
 命令行格式
 ==========
+::
 
-Usage::
-    
-    Usage: netdisk [options] command [argument ...]
-    
-    Commands: info,put,mv,ls,get,ask,rm,cp,cat
-    
-    Options:
-      --version     show program's version number and exit
-      -h, --help    show this help message and exit
-      -q, --quiet   don't print status messages to stdout
-      -n NETDISK    netdisk type: dropbox, kuaipan
-      -a APPTOKEN   netdisk app token
-      -u USERTOKEN  user access token
-      -d DESTTOKEN  destination user access token, for copy between two users
+    usage: netdisk.py [-h] [--version] [-v] [--listdisk] [--d1 DISKNAME1]
+                      [--d2 DISKNAME2] [-n TYPE] [-a APPTOKEN] [-u USERTOKEN]
+                      [-d DESTTOKEN]
+                      [command] [path [path ...]]
 
-Sample::
+    Module:
+        dropbox: 1.5.1
+        kuaipan: 0.1beta
 
-    # 申请一个新的用户token
-    netdisk -a apptoken ask
-    # 查看目录
-    netdisk -a apptoken -u usertoken ls
+    positional arguments:
+      command         Support: info, put, mv, ls, get, ask, rm, cp, cat
+      path            directory or files
 
-API 
+    optional arguments:
+      -h, --help      show this help message and exit
+      --version       show program's version number and exit
+      -v, --verbose   verbose help
+      --listdisk      list netdisk name in config
+      --d1 DISKNAME1  netdisk name in config
+      --d2 DISKNAME2  netdisk name in config, the destination in command cp
+      -n TYPE         netdisk type: dropbox, kuaipan
+      -a APPTOKEN     netdisk app token
+      -u USERTOKEN    user access token
+      -d DESTTOKEN    destination user access token, for copy between two users
+
+API
 =====
 1. `Dropbox API <https://www.dropbox.com/developers>`_
 2. `Kuapan API <http://www.kuaipan.cn/developers/document.htm>`_
 
+.. |download| image:: https://pypip.in/d/netdisk/badge.png
+    :target: https://pypi.python.org/pypi/netdisk/
+    :alt: Downloads
