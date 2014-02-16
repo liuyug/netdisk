@@ -43,10 +43,10 @@ API
 1. `Dropbox API <https://www.dropbox.com/developers>`_
 2. `Kuapan API <http://www.kuaipan.cn/developers/document.htm>`_
 
-.. |version| image:: http://img.shields.io/pypi/v/netdisk.svg
+.. |version| image:: https://img.shields.io/pypi/v/netdisk.svg
     :target: https://pypi.python.org/pypi/netdisk/
     :alt: Version
 
-.. |download| image:: http://img.shields.io/pypi/dm/netdisk.svg
+.. |download| image:: https://img.shields.io/pypi/dm/netdisk.svg
     :target: https://pypi.python.org/pypi/netdisk/
     :alt: Downloads
