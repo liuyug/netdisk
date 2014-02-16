@@ -2,7 +2,7 @@
 NetDisk
 =============
 
-|download|
+|version| |download|
 
 网盘的命令行接口, 支持以下网盘:
 
@@ -43,6 +43,10 @@ API
 1. `Dropbox API <https://www.dropbox.com/developers>`_
 2. `Kuapan API <http://www.kuaipan.cn/developers/document.htm>`_
 
+.. |version| image:: https://pypip.in/v/cloudsafe/badge.png
+    :target: https://crate.io/packages/cloudsafe/
+    :alt: Version
+
 .. |download| image:: https://pypip.in/d/netdisk/badge.png
-    :target: https://pypi.python.org/pypi/netdisk/
+    :target: https://crate.io/packages/netdisk/
     :alt: Downloads
