@@ -43,8 +43,8 @@ API
 1. `Dropbox API <https://www.dropbox.com/developers>`_
 2. `Kuapan API <http://www.kuaipan.cn/developers/document.htm>`_
 
-.. |version| image:: https://pypip.in/v/cloudsafe/badge.png
-    :target: https://crate.io/packages/cloudsafe/
+.. |version| image:: https://pypip.in/v/netdisk/badge.png
+    :target: https://crate.io/packages/netdisk/
     :alt: Version
 
 .. |download| image:: https://pypip.in/d/netdisk/badge.png
